@@ -1,0 +1,4 @@
+I have always admired the code Peter Norvig writes. But reading code gives only 
+a superficial understanding. To really understand the code one must work with it.
+Since I was learning ES6 I decided to reimplement all the code in pytudes in ES6.
+My goal is to write the most idiomatic ES6 without worrying about the performance.
