@@ -1,20 +1,20 @@
 import * as fs from 'fs';
 import { center, sum, zip } from './util';
 
-let cross = (A, B) => {
-  let result = [];
-  for (let a of A) {
-    for (let b of B) {
+const cross = (A, B) => {
+  const result = [];
+  for (const a of A) {
+    for (const b of B) {
       result.push(a + b);
     }
   }
   return result;
 };
 
-let subregion = (rowTriples, colTriples) => {
-  let result = [];
-  for (let rs of rowTriples) {
-    for (let cs of colTriples) {
+const subregion = (rowTriples, colTriples) => {
+  const result = [];
+  for (const rs of rowTriples) {
+    for (const cs of colTriples) {
       result.push(cross(rs, cs));
     }
   }
@@ -34,13 +34,8 @@ export const unitlist = []
 
 export const units = new Map(
   squares.map(s => {
-    let result = [];
-    for (let u of unitlist) {
-      if (u.includes(s)) {
-        result.push(u);
-      }
-    }
-    return [s, result];
+    const unitsWithS = unitlist.filter(u => u.includes(s));
+    return [s, unitsWithS];
   })
 );
 
@@ -54,8 +49,8 @@ export const peers = new Map(squares.map(s => [s, new Set([].concat(...units.get
  * a Map with the assignments
  */
 export const parseGrid = grid => {
-  let values = new Map(squares.map(s => [s, digits]));
-  for (let [s, d] of gridValues(grid).entries()) {
+  const values = new Map(squares.map(s => [s, digits]));
+  for (const [s, d] of gridValues(grid).entries()) {
     if (digits.includes(d) && !assign(values, s, d)) {
       return false;
     }
@@ -84,10 +79,10 @@ export const assign = (values, s, d) => {
 
 /**
  *
- *
+ * Eliminates digit d from square s in values
  * @export
  * @param {Map} values : Map of squares to possible digits
- * @param {String} s : Sqaure
+ * @param {String} s : Square
  * @param {String} d : Digit
  * @return {False|Map}
  */
@@ -109,7 +104,7 @@ export const eliminate = (values, s, d) => {
     }
   }
   // (2) If a unit u is reduced to only one place for a value d, then put it there.
-  for (let u of units.get(s)) {
+  for (const u of units.get(s)) {
     const dplaces = u.filter(sq => values.get(sq).includes(d));
     if (dplaces.length == 0) {
       return false;
@@ -146,9 +141,9 @@ export function display(values) {
   const line = Array(3)
     .fill(dashes)
     .join('+');
-  for (let r of rows) {
-    let result = [];
-    for (let c of cols) {
+  for (const r of rows) {
+    const result = [];
+    for (const c of cols) {
       result.push(center(values.get(r + c), width));
       if ('36'.includes(c)) {
         result.push('|');
@@ -162,7 +157,7 @@ export function display(values) {
 }
 
 /**
- *
+ * Solve a grid
  *
  * @export
  * @param {any} grid
@@ -173,7 +168,7 @@ export function solve(grid) {
 }
 
 /**
- *
+ * Search for a solution
  *
  * @export
  * @param {any} values
@@ -196,7 +191,7 @@ export function search(values) {
       return mr != null;
     })
     .reduce((prev, curr) => (prev[0] < curr[0] ? prev : curr));
-  for (let d of values.get(s)) {
+  for (const d of values.get(s)) {
     const result = search(assign(new Map(values), s, d));
     if (result) {
       return result;
@@ -258,7 +253,7 @@ function solveAll(grids, name = '') {
   if (N < 1) {
     return;
   }
-  let printTimeInfo = `(avg ${sum(times) / N} ms (${N / sum(times)} KHz), max ${Math.max(...times)}`;
+  const printTimeInfo = `(avg ${sum(times) / N} ms (${N / sum(times)} KHz), max ${Math.max(...times)}`;
   console.log(`Solved ${results.length} of ${N} ${name} puzzles ${printTimeInfo}`);
 }
 
